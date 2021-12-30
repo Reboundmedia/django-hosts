@@ -93,7 +93,9 @@ class host(object):
         pattern to avoid rather unwieldy escaping in every definition.
         """
         self.regex = regex
-        self.compiled_regex = re.compile(r'%s(\.|$)' % regex)
+        parent_host = getattr(settings, 'PARENT_HOST', '').lstrip('.')
+        suffix = r'\.' + parent_host if parent_host else ''
+        self.compiled_regex = re.compile(r'%s%s(\.|:|$)' % (regex, suffix))
         self.urlconf = urlconf
         self.name = name
         self._scheme = scheme
